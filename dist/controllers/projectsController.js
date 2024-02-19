@@ -12,10 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.collaboratorRemove = exports.collaboratorAdd = exports.projectRemove = exports.projectUpdate = exports.proejectDetail = exports.projectStore = exports.projectsList = void 0;
 const projectsList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        /* const projects = await Project.find().where("createdBy").equals(req.user);
+
         return res.status(200).json({
             ok: true,
-            msg: 'Lista de Proyectos'
-        });
+            projects
+        }) */
     }
     catch (error) {
         console.log(error);

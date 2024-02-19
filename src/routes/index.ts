@@ -3,6 +3,7 @@ import { changePassword, checked, login, register, sendToken, verifyToken } from
 import { taskChangeState, taskDetail, taskRemove, taskStore, taskUpdate, tasksList } from '../controllers/tasksController';
 import { profile } from '../controllers/usersController';
 import { collaboratorAdd, collaboratorRemove, proejectDetail, projectsList, projectRemove, projectStore, projectUpdate } from '../controllers/projectsController';
+import { checkAuth } from '../middlewares';
 const router = Router();
 
 /* AUTH */
@@ -14,11 +15,11 @@ router
   .route('/reset-password')
   .get(verifyToken)
   .post(changePassword);
-  
+
 /* PROYECTOS */
 router
   .route('/projects')
-  .get(projectsList)
+  /* .get(checkAuth, projectsList) */
   .post(projectStore)
 router
   .route('/projects/:id')
@@ -36,15 +37,14 @@ router
   .post(taskStore)
 router
   .route('/tasks/:id')
-    .get(taskDetail)
-    .put(taskUpdate)
-    .delete(taskRemove)
+  .get(taskDetail)
+  .put(taskUpdate)
+  .delete(taskRemove)
 router
-    .post('/tast/:id/change-state', taskChangeState)
+  .post('/tast/:id/change-state', taskChangeState)
 
 /* USUARIOS */
 router
   .get('/', profile);
-
 
 export default router;
