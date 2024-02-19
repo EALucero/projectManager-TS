@@ -8,7 +8,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const errorResponse = (res, error, origin) => {
     return res.status(error.status || 500).json({
         ok: false,
-        msg: error instanceof Error ? error.message : 'Upss, hubo un error en ${origin}'
+        msg: error instanceof Error ? error.message : `Upss, hubo un error en ${origin}`
     });
 };
 exports.errorResponse = errorResponse;

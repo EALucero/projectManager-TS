@@ -18,7 +18,7 @@ router
 /* PROYECTOS */
 router
     .route('/projects')
-    .get(projectsController_1.projectsList)
+    /* .get(checkAuth, projectsList) */
     .post(projectsController_1.projectStore);
 router
     .route('/projects/:id')
