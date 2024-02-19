@@ -3,11 +3,19 @@ import express, { Express, NextFunction, Request, Response } from 'express';
 import connectDB from './config/db';
 import router from './routes';
 import createHttpError from 'http-errors';
+import cors from 'cors';
 
 interface ResponseError extends Error {
   status: number;
 }
 const app: Express = express();
+const allowedOrigins = ['http://localhost:5173'];
+
+const options: cors.CorsOptions = {
+  origin: allowedOrigins
+};
+
+app.use(cors(options));
 
 connectDB();
 
