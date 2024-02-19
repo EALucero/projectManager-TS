@@ -1,6 +1,6 @@
 import { Response }  from 'express';
 import { Types } from 'mongoose';
-import { jwt } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 export const errorResponse = (res: Response, error: any, origin: string) => {
     return res.status(error.status || 500).json({ 
@@ -19,6 +19,6 @@ export interface UserPayload {
     id: Types.ObjectId
 }
 
-export const generateJWT = (payload : UserPayload) => jwt.sign(payload, process.env.JWT_SECRET,{
+export const generateJWT = (payload : UserPayload) => jwt.sign(payload, process.env.JWT_SECRET as string,{
     expiresIn : '1h'
 })
