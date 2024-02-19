@@ -38,6 +38,7 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             msg: 'Usuario Registrado',
             data: userStore
         })
+    }
     catch (error) {
         (0, helpers_1.errorResponse)(res, error, "REGISTER");
     }
