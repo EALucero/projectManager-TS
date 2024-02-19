@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { changePassword, checked, login, register, sendToken, verifyToken } from '../controllers/authController';
 import { taskChangeState, taskDetail, taskRemove, taskStore, taskUpdate, tasksList } from '../controllers/tasksController';
 import { profile } from '../controllers/usersController';
-import { collaboratorAdd, collaboratorRemove, proejectDetail, projectsList, projectRemove, projectStore, projectUpdate } from '../controllers/projectsController';
+import { collaboratorAdd, collaboratorRemove, projectDetail, projectsList, projectRemove, projectStore, projectUpdate } from '../controllers/projectsController';
 import { checkAuth } from '../middlewares';
 const router = Router();
 
@@ -19,13 +19,13 @@ router
 /* PROYECTOS */
 router
   .route('/projects')
-  /* .get(checkAuth, projectsList) */
-  .post(projectStore)
+  .get(checkAuth, projectsList)
+  .post(checkAuth, projectStore)
 router
   .route('/projects/:id')
-  .get(proejectDetail)
-  .put(projectUpdate)
-  .delete(projectRemove)
+  .get(checkAuth, projectDetail)
+  .put(checkAuth, projectUpdate)
+  .delete(checkAuth, projectRemove)
 router
   .get('/collaborator', collaboratorAdd)
   .delete('/collaborator', collaboratorRemove)

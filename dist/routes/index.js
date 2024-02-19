@@ -5,6 +5,7 @@ const authController_1 = require("../controllers/authController");
 const tasksController_1 = require("../controllers/tasksController");
 const usersController_1 = require("../controllers/usersController");
 const projectsController_1 = require("../controllers/projectsController");
+const middlewares_1 = require("../middlewares");
 const router = (0, express_1.Router)();
 /* AUTH */
 router
@@ -18,13 +19,13 @@ router
 /* PROYECTOS */
 router
     .route('/projects')
-    /* .get(checkAuth, projectsList) */
-    .post(projectsController_1.projectStore);
+    .get(middlewares_1.checkAuth, projectsController_1.projectsList)
+    .post(middlewares_1.checkAuth, projectsController_1.projectStore);
 router
     .route('/projects/:id')
-    .get(projectsController_1.proejectDetail)
-    .put(projectsController_1.projectUpdate)
-    .delete(projectsController_1.projectRemove);
+    .get(middlewares_1.checkAuth, projectsController_1.projectDetail)
+    .put(middlewares_1.checkAuth, projectsController_1.projectUpdate)
+    .delete(middlewares_1.checkAuth, projectsController_1.projectRemove);
 router
     .get('/collaborator', projectsController_1.collaboratorAdd)
     .delete('/collaborator', projectsController_1.collaboratorRemove);
