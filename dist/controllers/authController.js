@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.changePassword = exports.verifyToken = exports.sendToken = exports.checked = exports.login = exports.register = void 0;
+
 const http_errors_1 = __importDefault(require("http-errors"));
 const helpers_1 = require("../helpers");
 const User_1 = __importDefault(require("../models/User"));
@@ -20,8 +21,6 @@ const bcryptjs_1 = require("bcryptjs");
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, email, password } = req.body;
-        if (!name || !email || !password)
-            throw (0, http_errors_1.default)(400, "Todos los campos son obligatorios");
         if ([name, email, password].includes(""))
             throw (0, http_errors_1.default)(400, "Todos los campos son obligatorios");
         let user = yield User_1.default.findOne({
@@ -32,13 +31,13 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         user = new User_1.default(req.body);
         user.token = (0, helpers_1.generateTokenRandom)();
         const userStore = yield user.save();
-        //TODO: enviar el email de confirmación con el TOKEN 
+        //TODO: enviar el email de confirmación con el TOKEN
+      
         return res.status(201).json({
             ok: true,
             msg: 'Usuario Registrado',
             data: userStore
-        });
-    }
+        })
     catch (error) {
         (0, helpers_1.errorResponse)(res, error, "REGISTER");
     }
@@ -109,7 +108,7 @@ const sendToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     catch (error) {
-        return (0, helpers_1.errorResponse)(res, error, "SEND-TOKEN");
+        (0, helpers_1.errorResponse)(res, error, "SEND-TOKEN");
     }
 });
 exports.sendToken = sendToken;
