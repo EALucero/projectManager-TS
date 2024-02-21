@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom'
 import { useForm } from '../hooks/useForm'
-import { FormEvent, useContext } from 'react';
+import { FormEvent, useState } from 'react';
 import { Alert } from '../components/Alert';
-import AuthContext from '../context/AuthProvider';
 import clientAxios from '../config/clientAxios';
 import { showMessageResponse } from '../utils';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import useAuth from '../hooks/useAuth';
 
-interface FormValuesRegister {
+interface FormDataValues {
     name: string;
     email: string;
     password: string;
@@ -17,16 +17,17 @@ interface FormValuesRegister {
 const exRegEmail = /^[^@]+@[^@]+\.[a-zA-Z]{2,}/;
 
 export const Register = () => {
-    const { alert, handleShowAlert } = useContext(AuthContext)
+    const { alert, handleShowAlert } = useAuth();
+    const [sending, setSending] = useState(false);
 
-    const { formValues, handleInputChange, reset } = useForm({
+    const { formValues, handleInputChange, reset } = useForm<FormDataValues>({
         name: "",
         email: "",
         password: "",
         password2: ""
-    } as FormValuesRegister)
+    })
 
-    const { name, email, password, password2 } = formValues as FormValuesRegister;
+    const { name, email, password, password2 } = formValues;
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
@@ -46,18 +47,20 @@ export const Register = () => {
         }
 
         try {
+            setSending(true)
+
             const { data }: AxiosResponse = await clientAxios.post('/register', {
                 name,
                 email,
                 password
             });
 
-            showMessageResponse("Gracias por registrarte", data.msg, 'success')
+            setSending(false)
+            showMessageResponse("Confirmación pendiente", data.msg, 'warning')
         } catch (error) {
-            console.log(error);
+            handleShowAlert(axios.isAxiosError(error) ? error.response?.data.msg : error);
         }
 
-        console.log(formValues);
         reset()
     }
 
@@ -133,11 +136,11 @@ export const Register = () => {
                     />
                 </div>
 
-                <input
+                <button
                     type="submit"
-                    value="Crear Cuenta"
-                    className="bg-sky-700 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-sky-800 transition-colors"
-                />
+                    className={`${sending ? 'bg-sky-300  hover:bg-sky-300' : 'bg-sky-700  hover:bg-sky-800'}  mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointertransition-colors`}
+                    disabled={sending}
+                >Creá tu cuenta</button>
             </form>
 
             <nav className="text-center">
