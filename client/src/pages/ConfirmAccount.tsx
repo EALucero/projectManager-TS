@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom"
 import useAuth from "../hooks/useAuth";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import clientAxios from "../config/clientAxios";
 import { showMessageResponse } from "../utils";
 import { Alert } from "../components/Alert";
@@ -15,7 +15,7 @@ export const ConfirmAccount = () => {
   useEffect(() => {
     const confirmAccount = async () => {
       try {
-        const { data }: AxiosResponse = await clientAxios.get(`/checked?token=${token}`);
+        const { data } = await clientAxios.get(`/checked?token=${token}`);
         
         showMessageResponse("Cuenta confirmada", data.msg, 'success', () => navigate('/'));
       } catch (error) {

@@ -1,8 +1,8 @@
 import { FormEvent } from 'react';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from '../hooks/useForm';
 import { Alert } from '../components/Alert';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import clientAxios from '../config/clientAxios';
 import { showMessageResponse } from '../utils';
 import useAuth from '../hooks/useAuth';
@@ -13,7 +13,8 @@ interface FormDataValues {
 }
 
 export const Login = () => {
-    const { alert, handleShowAlert } = useAuth()
+    const { alert, handleShowAlert, setAuth } = useAuth()
+    const navigate = useNavigate();
 
     const { formValues, handleInputChange, reset } = useForm<FormDataValues>({
         email: "",
@@ -31,15 +32,17 @@ export const Login = () => {
         }
 
         try {
-            const { data }: AxiosResponse = await clientAxios.post('/login', {
+            const { data } = await clientAxios.post('/login', {
                 email,
                 password
             });
 
-            showMessageResponse("Gracias por logearte", data.msg, 'info')
+            localStorage.setItem('tokenPM', data.token);
+            setAuth(data.user)
+            showMessageResponse(`Hola ${data.user.name}!`, data.msg, 'info', () => navigate('/proyectos'))
         } catch (error) {
-            handleShowAlert(axios.isAxiosError(error)? error.response?.data.msg : error);
             console.log(error);
+            handleShowAlert(axios.isAxiosError(error)? error.response?.data.msg : error);
         }
         
         console.log(formValues);
