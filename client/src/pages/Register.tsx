@@ -4,6 +4,8 @@ import { FormEvent, useContext } from 'react';
 import { Alert } from '../components/Alert';
 import AuthContext from '../context/AuthProvider';
 import clientAxios from '../config/clientAxios';
+import { showMessageResponse } from '../utils';
+import { AxiosResponse } from 'axios';
 
 interface FormValuesRegister {
     name: string;
@@ -15,8 +17,8 @@ interface FormValuesRegister {
 const exRegEmail = /^[^@]+@[^@]+\.[a-zA-Z]{2,}/;
 
 export const Register = () => {
-    const {alert, handleShowAlert} = useContext(AuthContext)
-    
+    const { alert, handleShowAlert } = useContext(AuthContext)
+
     const { formValues, handleInputChange, reset } = useForm({
         name: "",
         email: "",
@@ -44,11 +46,15 @@ export const Register = () => {
         }
 
         try {
-            const response = clientAxios.post('/register');
-            console.log(response);
-            
+            const { data }: AxiosResponse = await clientAxios.post('/register', {
+                name,
+                email,
+                password
+            });
+
+            showMessageResponse("Gracias por registrarte", data.msg, 'success')
         } catch (error) {
-            console.log(error);           
+            console.log(error);
         }
 
         console.log(formValues);
