@@ -1,4 +1,3 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 
 export const Login = () => {
@@ -6,6 +5,7 @@ export const Login = () => {
         <>
             <h1 className="text-sky-600 font-black text-6xl capitalize">Inicia <span className="text-slate-700">sesión</span>
             </h1>
+
             <form
                 className="my-10 bg-white shadow rounded-lg p-10"
             >
@@ -41,12 +41,11 @@ export const Login = () => {
                 />
             </form>
 
-            <nav className="lg:flex lg:justify-between">
+            <nav className="text-center">
                 <Link
                     className='block text-center my-5 text-slate-500 uppercase text-sm'
                     to="/registrar"
                 >¿No tienes una cuenta? Regístrate</Link>
-
                 <Link
                     className='block text-center my-5 text-slate-500 uppercase text-sm'
                     to="/olvide-password"

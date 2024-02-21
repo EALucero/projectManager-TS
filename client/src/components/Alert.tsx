@@ -1,7 +1,7 @@
-import React from 'react'
-
-export const Alert = () => {
+export const Alert = ({ msg }: { msg: string }) => {
   return (
-    <div>Alert</div>
+    <div className="bg-red-600 text-center p-3 rounded-md uppercase text-white font-bold text-sm my-8">
+      {msg}
+    </div>
   )
 }
