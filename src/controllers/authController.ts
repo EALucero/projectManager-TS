@@ -55,10 +55,11 @@ export const login = async (req: Request, res: Response) => {
         return res.status(200).json({
             ok: true,
             msg: 'Usuario Logueado',
+            token: generateJWT({ id: user._id }),
             user: {
-                nombre: user.name,
-                email: user.email,
-                token: generateJWT({ id: user._id })
+                _id: user._id,
+                name: user.name,
+                email: user.email
             }
         })
     } catch (error) {
