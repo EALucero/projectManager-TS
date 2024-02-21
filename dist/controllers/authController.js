@@ -63,10 +63,11 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(200).json({
             ok: true,
             msg: 'Usuario Logueado',
+            token: (0, helpers_1.generateJWT)({ id: user._id }),
             user: {
-                nombre: user.name,
-                email: user.email,
-                token: (0, helpers_1.generateJWT)({ id: user._id })
+                _id: user._id,
+                name: user.name,
+                email: user.email
             }
         });
     }
