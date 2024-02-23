@@ -23,7 +23,7 @@ const projectsList = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         return res.status(200).json({
             ok: true,
             msg: "Lista de Proyectos",
-            data: projects
+            projects
         });
     }
     catch (error) {
@@ -46,8 +46,8 @@ const projectStore = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const projectStore = yield project.save();
         return res.status(201).json({
             ok: true,
-            msg: "Proyecto guardado",
-            data: projectStore
+            msg: "Proyecto guardado con exito",
+            projectStore
         });
     }
     catch (error) {
@@ -71,7 +71,7 @@ const projectDetail = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return res.status(200).json({
             ok: true,
             msg: "Detalle del Proyecto",
-            data: project
+            project
         });
     }
     catch (error) {
@@ -99,8 +99,8 @@ const projectUpdate = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const projectUpdate = yield project.save();
         return res.status(201).json({
             ok: true,
-            msg: "Proyecto actualizado",
-            data: projectUpdate,
+            msg: "Proyecto actualizado correctamente",
+            projectUpdate,
         });
     }
     catch (error) {

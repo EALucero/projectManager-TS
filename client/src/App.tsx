@@ -11,10 +11,12 @@ import Projects from './pages/Projects'
 import ProjectAdd from './pages/ProjectAdd'
 import ProjectEdit from './pages/ProjectEdit'
 import Project from './pages/Project'
+import { ProjectProvider } from './context/ProjectProvider'
 
 function App() {
   return (
     <AuthProvider>
+      <ProjectProvider>
       <Routes>
         <Route path='/' element={<AuthLayout />}>
           <Route index element={<Login />} />
@@ -30,6 +32,7 @@ function App() {
           <Route path='editar-proyecto/:id' element={<ProjectEdit />} />
         </Route>
       </Routes>
+      </ProjectProvider>
     </AuthProvider>
   )
 }
