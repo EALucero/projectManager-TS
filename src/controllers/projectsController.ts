@@ -11,7 +11,7 @@ export const projectsList = async (req: Request, res: Response) => {
         return res.status(200).json({
             ok: true,
             msg: "Lista de Proyectos",
-            data: projects
+            projects
         })
     } catch (error) {
         errorResponse(res, error, "PROJECT-LIST")
@@ -35,12 +35,13 @@ export const projectStore = async (req: Request, res: Response) => {
         const project = new Project(req.body);
 
         project.createdBy = req.user._id;
+
         const projectStore = await project.save();
 
         return res.status(201).json({
             ok: true,
-            msg: "Proyecto guardado",
-            data: projectStore
+            msg: "Proyecto guardado con exito",
+            project: projectStore
         })
     } catch (error) {
         errorResponse(res, error, "PROJECT-STORE")
@@ -64,7 +65,7 @@ export const projectDetail = async (req: Request, res: Response) => {
         return res.status(200).json({
             ok: true,
             msg: "Detalle del Proyecto",
-            data: project
+            project
         });
     } catch (error) {
         errorResponse(res, error, "PROJECT-DETAIL")
@@ -95,8 +96,8 @@ export const projectUpdate = async (req: Request, res: Response) => {
 
         return res.status(201).json({
             ok: true,
-            msg: "Proyecto actualizado",
-            data: projectUpdate,
+            msg: "Proyecto actualizado correctamente",
+            project: projectUpdate,
         });
     } catch (error) {
         errorResponse(res, error, "PROJECT-UPDATE")
@@ -134,11 +135,7 @@ export const collaboratorAdd = async (req: Request, res: Response) => {
             msg: 'Colaborador agregado'
         })
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            msg: error instanceof Error ? error.message : 'Upss, hubo un error en ADD-COLLABORATOR'
-        })
+        errorResponse(res, error, "ADD-COLLABORATOR")
     }
 }
 
@@ -149,10 +146,6 @@ export const collaboratorRemove = async (req: Request, res: Response) => {
             msg: 'Colaborador eliminado'
         })
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            msg: error instanceof Error ? error.message : 'Upss, hubo un error en REMOVE-COLLABORATOR'
-        })
+        errorResponse(res, error, "REMOVE-COLLABORATOR")
     }
 }
