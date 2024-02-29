@@ -1,4 +1,6 @@
-import mongoose from 'mongoose';  
+import mongoose, { Types } from 'mongoose';  
+import { Task } from './Task';
+import { User } from './User';
  
 var projectSchema = new mongoose.Schema({ 
     name:{ 
@@ -23,7 +25,14 @@ var projectSchema = new mongoose.Schema({
     createdBy:{ 
         type:mongoose.Schema.Types.ObjectId, 
         ref: 'User', 
-    }, 
+        required : true
+    },
+    tasks : [
+        { 
+            type:mongoose.Schema.Types.ObjectId, 
+            ref: 'Task', 
+        } 
+    ],
     collaborators :[ 
         { 
             type:mongoose.Schema.Types.ObjectId, 
@@ -33,5 +42,16 @@ var projectSchema = new mongoose.Schema({
 },{ 
     timestamps : true, 
 }); 
+
+
+export type Project = {
+    name : string;
+    description : string;
+    dateExpire : Date;
+    createdBy : Types.ObjectId;
+    client : string;
+    tasks : Types.Array<Task>;
+    collaborators : Types.Array<User>;
+}
  
-export = mongoose.model('Project', projectSchema);
+export default  mongoose.model<Project>('Project', projectSchema);
