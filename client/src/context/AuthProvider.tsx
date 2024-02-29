@@ -2,7 +2,7 @@ import React, { PropsWithChildren, createContext, useEffect, useState } from 're
 import clientAxios from '../config/clientAxios';
 import axios from 'axios';
 
-interface Auth {
+export interface Auth {
     _id?: string;
     name?: string;
     email?: string;
