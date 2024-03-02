@@ -1,7 +1,4 @@
-
 const TaskCard = () => {
-
-   
 
     return (
         <div className="border-b p-5 flex justify-between items-center">
@@ -14,30 +11,27 @@ const TaskCard = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-            <div>
-                <label htmlFor="" className="flex items-center justify-center gap-2 uppercase font-semibold ">
-                    <input id=""  type="checkbox"  className=" h-5 w-5" />
+                <div>
+                    <label htmlFor="" className="flex items-center justify-center gap-2 uppercase font-semibold ">
+                        <input id="" type="checkbox" className=" h-5 w-5" />
                         Completada
-                </label>
+                    </label>
 
                 </div>
-                {true && 
+                
+                {true &&
                     <div className="flex flex-col lg:flex-row justify-end gap-2">
                         <button
                             className="bg-indigo-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg"
-                           
+
                         ><i className="fa-solid fa-pencil"></i></button>
                         <button
                             className="bg-red-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg"
-                            
-                        ><i className="fa-solid fa-trash-can"></i></button>
 
+                        ><i className="fa-solid fa-trash-can"></i></button>
                     </div>
                 }
-              
-
-
-                    </div>
+            </div>
         </div>
     )
 }
