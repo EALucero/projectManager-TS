@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { changePassword, checked, login, register, sendToken, verifyToken } from '../controllers/authController';
 import { taskChangeState, taskDetail, taskRemove, taskStore, taskUpdate } from '../controllers/tasksController';
 import { profile } from '../controllers/usersController';
-import { collaboratorAdd, collaboratorRemove, proejectDetail, projectsList, projectRemove, projectStore, projectUpdate } from '../controllers/projectsController';
+import { collaboratorAdd, collaboratorRemove, projectDetail, projectsList, projectRemove, projectStore, projectUpdate } from '../controllers/projectsController';
 import { checkAuth } from '../middlewares';
 const router = Router();
 
@@ -15,7 +15,7 @@ router
   .route('/reset-password')
   .get(verifyToken)
   .post(changePassword);
-  
+
 /* PROYECTOS */
 router
   .route('/projects')
@@ -23,9 +23,9 @@ router
   .post(checkAuth, projectStore)
 router
   .route('/projects/:id')
-  .get(checkAuth,proejectDetail)
-  .put(checkAuth,projectUpdate)
-  .delete(checkAuth,projectRemove)
+  .get(checkAuth, projectDetail)
+  .put(checkAuth, projectUpdate)
+  .delete(checkAuth, projectRemove)
 router
   .get('/collaborator', collaboratorAdd)
   .delete('/collaborator', collaboratorRemove)
@@ -33,17 +33,16 @@ router
 /* TAREAS */
 router
   .route('/tasks')
-  .post(checkAuth,taskStore)
+  .post(checkAuth, taskStore)
 router
   .route('/tasks/:id')
-    .get(checkAuth,taskDetail)
-    .put(checkAuth,taskUpdate)
-    .delete(checkAuth,taskRemove)
-    .post(checkAuth,taskChangeState)
+  .get(checkAuth, taskDetail)
+  .put(checkAuth, taskUpdate)
+  .delete(checkAuth, taskRemove)
+  .post(checkAuth, taskChangeState)
 
 /* USUARIOS */
 router
-  .get('/profile',checkAuth, profile);
-
+  .get('/profile', checkAuth, profile);
 
 export default router;

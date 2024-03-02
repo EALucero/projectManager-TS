@@ -29,7 +29,7 @@ function App() {
           <Route index element={<Projects />} />
           <Route path='crear-proyecto' element={<ProjectAdd />} />
           <Route path=':id' element={<Project/>} />
-          <Route path='editar-proyecto/:id' element={<ProjectEdit />} />
+          <Route path='editar/:id' element={<ProjectEdit />} />
         </Route>
       </Routes>
       </ProjectProvider>

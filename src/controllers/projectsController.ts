@@ -6,8 +6,6 @@ import { Types } from "mongoose";
 
 export const projectsList = async (req: Request, res: Response) => {
     try {
-
-
         console.log(req.user)
         const projects = await Project.find().where("createdBy").equals(req.user);
 
@@ -19,13 +17,12 @@ export const projectsList = async (req: Request, res: Response) => {
     } catch (error) {
         errorResponse(res, error, "PROJECT-LIST")
     }
-
 }
 
 export const projectStore = async (req: Request, res: Response) => {
     try {
-
         const { name, description, client } = req.body;
+
         if (
             [name, description, client].includes("") ||
             !name ||
@@ -46,17 +43,13 @@ export const projectStore = async (req: Request, res: Response) => {
             msg: 'Proyecto guardado con éxito',
             project : projectStore
         })
-
     } catch (error) {
         errorResponse(res, error, "PROJECT-CREATE")
-
     }
-
 }
 
-export const proejectDetail = async (req: Request, res: Response) => {
+export const projectDetail = async (req: Request, res: Response) => {
     try {
-
         const { id } = req.params;
 
         if (!Types.ObjectId.isValid(id)) throw createError(400, "No es un ID válido");
@@ -83,18 +76,15 @@ export const proejectDetail = async (req: Request, res: Response) => {
         })
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            ok: false,
-            msg: error instanceof Error ? error.message : 'Upss, hubo un error en PROJECT-DETAIL'
-        })
+        errorResponse(res, error, "PROJECT-DETAIL")
     }
 
 }
 
 export const projectUpdate = async (req: Request, res: Response) => {
     try {
-
         const { id } = req.params;
+
         if (!Types.ObjectId.isValid(id)) throw createError(400, "No es un ID válido");
 
         const project = await Project.findById(id);
@@ -112,7 +102,6 @@ export const projectUpdate = async (req: Request, res: Response) => {
 
         const projectUpdate = await project.save();
 
-
         return res.status(201).json({
             ok: true,
             msg: 'Proyecto actualizado correctamente',
@@ -120,17 +109,14 @@ export const projectUpdate = async (req: Request, res: Response) => {
         })
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            ok: false,
-            msg: error instanceof Error ? error.message : 'Upss, hubo un error en PROJECT-UPDATE'
-        })
+        errorResponse(res, error, "PROJECT-UPDATE")
     }
 }
 
 export const projectRemove = async (req: Request, res: Response) => {
     try {
-
         const { id } = req.params;
+
         if (!Types.ObjectId.isValid(id)) throw createError(400, "No es un ID válido");
 
         const project = await Project.findById(id);
@@ -144,14 +130,10 @@ export const projectRemove = async (req: Request, res: Response) => {
         return res.status(200).json({
             ok: true,
             msg: 'Proyecto eliminado con éxito'
-        })
-        
+        }) 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            ok: false,
-            msg: error instanceof Error ? error.message : 'Upss, hubo un error en PROJECT-REMOVE'
-        })
+        errorResponse(res, error, "PROJECT-REMOVE")
     }
 }
 
@@ -163,10 +145,7 @@ export const collaboratorAdd = async (req: Request, res: Response) => {
         })
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            ok: false,
-            msg: error instanceof Error ? error.message : 'Upss, hubo un error en ADD-COLLABORATOR'
-        })
+        errorResponse(res, error, "ADD-COLLABORATOR")
     }
 }
 
@@ -178,9 +157,6 @@ export const collaboratorRemove = async (req: Request, res: Response) => {
         })
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            ok: false,
-            msg: error instanceof Error ? error.message : 'Upss, hubo un error en REMOVE-COLLABORATOR'
-        })
+        errorResponse(res, error, "REMOVE-COLABORATOR")
     }
 }
