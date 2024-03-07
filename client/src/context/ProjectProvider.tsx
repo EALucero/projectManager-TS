@@ -4,259 +4,340 @@ import axios from "axios";
 import clientAxios from "../config/clientAxios";
 import { showToastMessage } from "../utils";
 import { useNavigate } from "react-router-dom";
+import { Auth } from "./AuthProvider";
 
 export interface Project {
-    _id: string;
-    name: string;
-    description: string;
-    dateExpire: string;
-    client: string;
-    tasks : Task[];
+  _id: string;
+  name: string;
+  description: string;
+  dateExpire: string;
+  client: string;
+  tasks: Task[];
 }
 
 export interface ProjectContextProps {
-    projects: Project[];
-    project: Project;
-    loading: boolean;
-    createProject : (value : FormDataProject) => void;
-    getProject: (id: string) => void;
-    updateProject : (value : FormDataProject, id : string) => void;
-    deleteProject : (id : string) => void;
-    task : Task;
-    showModalFormTask :boolean;
-    handlwShowModalFormTask : () => void;
-    createTask : (value : FormDataTask) => void;
+  projects: Project[];
+  project: Project;
+  loading: boolean;
+  createProject: (value: FormDataProject) => void;
+  getProject: (id: string) => void;
+  updateProject: (value: FormDataProject, id: string) => void;
+  deleteProject: (id: string) => void;
+  task: Task;
+  showModalFormTask: boolean;
+  handleShowModalTask: () => void;
+  handleNewModalTask: () => void;
+  handleEditModalTask: (task: Task) => void;
+  createTask: (value: FormDataTask) => void;
+  updateTask: (task: FormDataTask, id: string) => void;
+  deleteTask: (id: string) => void;
+  changeStateTask: (id: string) => void;
 }
 
 enum Priority {
-    Baja = 'Baja',
-    Media = 'Media',
-    Alta = 'Alta',
+  Baja = "Baja",
+  Media = "Media",
+  Alta = "Alta",
 }
 
 export interface Task {
-    name : string;
-    description : string;
-    dateExpire : string;
-    state : boolean;
-    priority : Priority;
-    project : string;
-    assigned : string;
+  _id: string;
+  name: string;
+  description: string;
+  dateExpire: string;
+  state: boolean;
+  priority: Priority;
+  project: string;
+  assigned: Auth;
 }
 
-export interface FormDataProject extends Omit<Project, '_id' | 'tasks'> {}
+export interface FormDataProject extends Omit<Project, "_id" | "tasks"> {}
 
-export interface FormDataTask extends Omit<Task, '_id' | 'state' | 'assigned'> {}
+export interface FormDataTask
+  extends Omit<Task, "_id" | "state" | "assigned" | "project"> {}
 
-const ProjectContext = createContext<ProjectContextProps>({} as ProjectContextProps)
+const ProjectContext = createContext<ProjectContextProps>(
+  {} as ProjectContextProps
+);
 
 const ProjectProvider = ({ children }: PropsWithChildren) => {
+  const navigate = useNavigate();
+  const { auth, handleShowAlert } = useAuth();
 
-    const navigate = useNavigate()
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [project, setProject] = useState<Project>({} as Project);
+  const [loading, setLoading] = useState(false);
 
-    const { auth, handleShowAlert } = useAuth()
+  const [task, setTask] = useState<Task>({} as Task);
+  const [showModalFormTask, setshowModalFormTask] = useState(false);
 
+  const getToken = () => {
+    const token = localStorage.getItem("tokenPM");
+    if (!token) return null;
 
-    const [projects, setProjects] = useState<Project[]>([]);
-    const [project, setProject] = useState<Project>({} as Project);
-    const [loading, setLoading] = useState(false);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
-    const [task, setTask] = useState<Task>({} as Task);
-    const [showModalFormTask, setshowModalFormTask] = useState(false)
-    
+    return config;
+  };
 
-    
-    const getToken = () => {
+  useEffect(() => {
+    const getProjects = async () => {
+      try {
+        const config = getToken();
+        if (!config) return;
 
-        const token = localStorage.getItem("tokenPM");
-        if (!token) return null
-
-        const config = {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            }
+        const { data } = await clientAxios.get("/projects", config);
+        setProjects(data.projects);
+      } catch (error) {
+        console.log(error);
+        if (error instanceof Error) {
+          handleShowAlert(
+            axios.isAxiosError(error) ? error.response?.data.msg : error.message
+          );
         }
+      }
+    };
 
-        return config
+    getProjects();
+  }, [auth]);
+
+  const createProject = async (value: FormDataProject) => {
+    try {
+      const config = getToken();
+      if (!config) return;
+
+      const { data } = await clientAxios.post("/projects", value, config);
+      showToastMessage(data.msg);
+
+      setProjects([...projects, data.project]);
+
+      navigate("/proyectos");
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        handleShowAlert(
+          axios.isAxiosError(error) ? error.response?.data.msg : error.message
+        );
+      }
     }
+  };
 
-    useEffect(() => {
-        const getProjects = async () => {
+  const getProject = async (id: string) => {
+    try {
+      setLoading(true);
 
-            try {
+      const config = getToken();
+      if (!config) return;
 
-                const config = getToken();
-                if(!config) return
-
-                const { data } = await clientAxios.get('/projects', config);
-
-                setProjects(data.projects)
-
-
-            } catch (error) {
-                console.log(error);
-                if (error instanceof Error) {
-                    handleShowAlert(axios.isAxiosError(error) ? error.response?.data.msg : error.message)
-                }
-            }
-        }
-
-        getProjects()
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [auth]);
-
-
-    const createProject = async (value: FormDataProject) => {
-        try {
-
-            const config = getToken();
-            if(!config) return
-
-            const { data } = await clientAxios.post('/projects', value, config);
-
-            showToastMessage(data.msg)
-
-            setProjects([
-                ...projects,
-                data.project
-            ])
-            
-            navigate('/proyectos')
-
-        } catch (error) {
-            console.log(error);
-            if (error instanceof Error) {
-                handleShowAlert(axios.isAxiosError(error) ? error.response?.data.msg : error.message)
-            }
-        }
+      const { data } = await clientAxios.get(`/projects/${id}`, config);
+      setProject(data.project);
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        handleShowAlert(
+          axios.isAxiosError(error) ? error.response?.data.msg : error.message
+        );
+      }
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const getProject = async (id : string) => {
-        try {
-            setLoading(true)
+  const updateProject = async (value: FormDataProject, id: string) => {
+    try {
+      const config = getToken();
+      if (!config) return;
 
-            const config = getToken();
-            if(!config) return
+      const { data }: { data: { ok: boolean; msg: string; project: Project } } =
+        await clientAxios.put(`/projects/${id}`, value, config);
+      showToastMessage(data.msg);
 
-            const { data } = await clientAxios.get(`/projects/${id}`, config);
+      const projectsUpdated = projects.map((project) =>
+        project._id === id ? data.project : project
+      );
+      setProjects(projectsUpdated);
 
-            setProject(data.project);
-            
-        } catch (error) {
-            console.log(error);
-            if (error instanceof Error) {
-                handleShowAlert(axios.isAxiosError(error) ? error.response?.data.msg : error.message)
-            }
-        } finally{
-            setLoading(false)
-
-        }
+      navigate("/proyectos");
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        handleShowAlert(
+          axios.isAxiosError(error) ? error.response?.data.msg : error.message
+        );
+      }
     }
+  };
 
-    const updateProject = async (value: FormDataProject, id : string) => {
+  const deleteProject = async (id: string) => {
+    try {
+      const config = getToken();
+      if (!config) return;
 
-        try {
-            const config = getToken();
-            if(!config) return
-    
-            const { data } : {data : {ok : boolean, msg : string, project : Project}} = await clientAxios.put(`/projects/${id}`, value, config);
-    
-            showToastMessage(data.msg)
+      const { data }: { data: { ok: boolean; msg: string } } =
+        await clientAxios.delete(`/projects/${id}`, config);
+      showToastMessage(data.msg);
 
-            const projectsUpdated = projects.map(project => project._id === id ? data.project : project)
+      const projectsUpdated = projects.filter((project) => project._id !== id);
+      setProjects(projectsUpdated);
 
-            setProjects(projectsUpdated)
-            
-            navigate('/proyectos')
-    
-        } catch (error) {
-            console.log(error);
-            if (error instanceof Error) {
-                handleShowAlert(axios.isAxiosError(error) ? error.response?.data.msg : error.message)
-            }
-        }
+      navigate("/proyectos");
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        handleShowAlert(
+          axios.isAxiosError(error) ? error.response?.data.msg : error.message
+        );
+      }
     }
+  };
 
-    const deleteProject = async (id : string) => {
-        try {
-            const config = getToken();
-            if(!config) return
+  /* tasks */
+  const handleShowModalTask = () => {
+    setTask({} as Task);
+    setshowModalFormTask(!showModalFormTask);
+  };
 
-            const { data } : {data : {ok : boolean, msg : string}} = await clientAxios.delete(`/projects/${id}`, config);
+  const handleNewModalTask = () => {
+    setTask({} as Task);
+    setshowModalFormTask(true);
+  };
 
-            showToastMessage(data.msg)
+  const handleEditModalTask = (task: Task) => {
+    setTask(task);
+    setshowModalFormTask(true);
+  };
 
-            const projectsUpdated = projects.filter(project => project._id !== id );
-            
-            setProjects(projectsUpdated)
-            
-            navigate('/proyectos')
+  const createTask = async (value: FormDataTask) => {
+    try {
+      const config = getToken();
+      if (!config) return;
 
-            
-        } catch (error) {
-            console.log(error);
-            if (error instanceof Error) {
-                handleShowAlert(axios.isAxiosError(error) ? error.response?.data.msg : error.message)
-            }
-        }
+      const { data }: { data: { ok: boolean; msg: string; task: Task } } =
+        await clientAxios.post(`/tasks`, value, config);
+      showToastMessage(data.msg);
+
+      project.tasks = [...project.tasks, data.task];
+      setProject(project);
+
+      handleShowModalTask();
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        handleShowAlert(
+          axios.isAxiosError(error) ? error.response?.data.msg : error.message
+        );
+      }
     }
+  };
 
-    /* tasks */
-    const handlwShowModalFormTask = () => {
-        setTask({} as Task);
-        setshowModalFormTask(!showModalFormTask)
+  const updateTask = async (value: FormDataTask, id: string) => {
+    try {
+      const config = getToken();
+      if (!config) return;
+
+      const { data }: { data: { ok: boolean; msg: string; task: Task } } =
+        await clientAxios.put(`/tasks/${id}`, value, config);
+      showToastMessage(data.msg);
+
+      setTask({} as Task);
+
+      project.tasks = project.tasks.map((task) =>
+        task._id === id ? data.task : task
+      );
+      setProject(project);
+
+      handleShowModalTask();
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        handleShowAlert(
+          axios.isAxiosError(error) ? error.response?.data.msg : error.message
+        );
+      }
     }
+  };
 
-    const createTask = async (value : FormDataTask) => {
-        try {
+  const deleteTask = async (id: string) => {
+    try {
+      const config = getToken();
+      if (!config) return;
 
-            const config = getToken();
-            if(!config) return
+      const { data }: { data: { ok: boolean; msg: string } } =
+        await clientAxios.delete(`/tasks/${id}`, config);
+      showToastMessage(data.msg);
 
-            const { data } : {data : {ok : boolean, msg : string, task : Task}} = await clientAxios.post(`/tasks`, value, config);
+      project.tasks = project.tasks.filter((task) => task._id !== id);
+      setProject(project);
 
-            showToastMessage(data.msg);
-
-            project.tasks = [...project.tasks, data.task]
-            setProject(project)
-            handlwShowModalFormTask()
-            
-        } catch (error) {
-            console.log(error);
-            if (error instanceof Error) {
-                handleShowAlert(axios.isAxiosError(error) ? error.response?.data.msg : error.message)
-            }
-        }
+      navigate(`/proyectos/${project._id}`);
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        handleShowAlert(
+          axios.isAxiosError(error) ? error.response?.data.msg : error.message
+        );
+      }
     }
+  };
 
+  const changeStateTask = async (id: string) => {
+    try {
+      const config = getToken();
+      if (!config) return;
 
-    return (
-        <ProjectContext.Provider
-            value={{
-                projects,
-                project,
-                loading,
-                createProject,
-                getProject,
-                updateProject,
-                deleteProject,
-                task,
-                showModalFormTask,
-                handlwShowModalFormTask,
-                createTask
-            }}
-        >
-            {children}
+      const { data }: { data: { ok: boolean; msg: string; task: Task } } =
+        await clientAxios.post(`/tasks/${id}`, {}, config);
+      showToastMessage(data.msg);
 
-        </ProjectContext.Provider>
-    )
+      setProject({
+        ...project,
+        tasks: project.tasks.map((item) =>
+          item._id === id
+            ? { ...item, state: data.task.state, assigned: data.task.assigned }
+            : item
+        ),
+      });
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        handleShowAlert(
+          axios.isAxiosError(error) ? error.response?.data.msg : error.message
+        );
+      }
+    }
+  };
 
-}
+  return (
+    <ProjectContext.Provider
+      value={{
+        projects,
+        project,
+        loading,
+        createProject,
+        getProject,
+        updateProject,
+        deleteProject,
+        task,
+        showModalFormTask,
+        handleShowModalTask,
+        handleNewModalTask,
+        handleEditModalTask,
+        createTask,
+        updateTask,
+        deleteTask,
+        changeStateTask,
+      }}
+    >
+      {children}
+    </ProjectContext.Provider>
+  );
+};
 
-export {
-    ProjectProvider
-}
+export { ProjectProvider };
 
-export default ProjectContext
+export default ProjectContext;

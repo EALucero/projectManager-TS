@@ -18,7 +18,9 @@ const nodemailer_1 = __importDefault(require("nodemailer"));
 const errorResponse = (res, error, origin) => {
     return res.status(error.status || 500).json({
         ok: false,
-        msg: error instanceof Error ? error.message : `Upss, hubo un error en ${origin}`
+        msg: error instanceof Error
+            ? error.message
+            : `Upss, hubo un error en ${origin}`,
     });
 };
 exports.errorResponse = errorResponse;
@@ -29,7 +31,7 @@ const generateTokenRandom = () => {
 };
 exports.generateTokenRandom = generateTokenRandom;
 const generateJWT = (payload) => jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: '1h'
+    expiresIn: "1h",
 });
 exports.generateJWT = generateJWT;
 exports.transporter = nodemailer_1.default.createTransport({
@@ -37,8 +39,8 @@ exports.transporter = nodemailer_1.default.createTransport({
     port: 2525,
     auth: {
         user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASSWORD
-    }
+        pass: process.env.MAIL_PASSWORD,
+    },
 });
 const confirmRegister = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, token } = data;
@@ -51,7 +53,7 @@ const confirmRegister = (data) => __awaiter(void 0, void 0, void 0, function* ()
             html: `
                 <p>Hola ${name}, hace click en el siguiente enlace:</p>
                 <a href=${process.env.URL_FRONTEND}/confirmar/${token}>Confirma tu cuenta<a/>
-            `
+            `,
         });
         console.log(responseMail);
     }

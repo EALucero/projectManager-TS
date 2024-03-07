@@ -23,22 +23,22 @@ var taskSchema = new mongoose_1.default.Schema({
     dateExpire: {
         type: Date,
         required: true,
-        default: Date.now()
+        default: Date.now(),
     },
     priority: {
         type: String,
         required: true,
-        enum: types_1.Priority, //opciones cerradas 
+        enum: types_1.Priority, //opciones cerradas
     },
     project: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'Project',
+        ref: "Project",
     },
     assigned: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'User',
-    }
+        ref: "User",
+    },
 }, {
-    timestamps: true
+    timestamps: true,
 });
-exports.default = mongoose_1.default.model('Task', taskSchema);
+exports.default = mongoose_1.default.model("Task", taskSchema);

@@ -40,11 +40,12 @@ var userSchema = new mongoose_1.default.Schema({
         default: false,
     },
 }, {
-    timestamps: true
+    timestamps: true,
 });
-userSchema.pre('save', function (next) {
+userSchema.pre("save", function (next) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!this.isModified('password')) { //evita volver a hashear el password cuando este no ha sido modificado 
+        if (!this.isModified("password")) {
+            //evita volver a hashear el password cuando este no ha sido modificado
             next();
         }
         this.password = yield (0, bcryptjs_1.hash)(this.password, 10);
@@ -57,4 +58,4 @@ userSchema.methods.checkedPassword = function (password) {
     });
 };
 //Export the model
-exports.default = mongoose_1.default.model('User', userSchema);
+exports.default = mongoose_1.default.model("User", userSchema);
