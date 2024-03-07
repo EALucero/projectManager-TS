@@ -3,7 +3,7 @@ export const RecoverPassword = () => {
     <>
       <h1>Reestablecé tu contraseña</h1>
 
-      <form action="" >
+      <form action="">
         <div>
           <label htmlFor="password">Nueva contraseña</label>
           <input
@@ -12,12 +12,8 @@ export const RecoverPassword = () => {
             placeholder="Escribí tu nueva contraseña"
           />
         </div>
-        <button
-          type="submit"
-        >
-          Guaradar tu contraseña
-        </button>
+        <button type="submit">Guaradar tu contraseña</button>
       </form>
     </>
-  )
-}
+  );
+};

@@ -12,14 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        (0, mongoose_1.set)('strictQuery', false);
+        (0, mongoose_1.set)("strictQuery", false);
         const connection = yield (0, mongoose_1.connect)(process.env.DB_CONNECTION);
         const url = `${connection.connection.host}:${connection.connection.port}`;
         console.log(`MongoDB connected in ${url}`);
     }
     catch (error) {
         console.log(`error: ${error.message}`);
-        process.exit(1); //obliga a terminar todos los procesos 
+        process.exit(1); //obliga a terminar todos los procesos
     }
 });
 exports.default = connectDB;

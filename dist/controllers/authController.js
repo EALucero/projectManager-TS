@@ -25,7 +25,7 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if ([name, email, password].includes(""))
             throw (0, http_errors_1.default)(400, "Todos los campos son obligatorios");
         let user = yield User_1.default.findOne({
-            email
+            email,
         });
         if (user)
             throw (0, http_errors_1.default)(400, "El email ya se encuentra registrado");
@@ -36,11 +36,11 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         yield (0, helpers_1.confirmRegister)({
             name: userStore.name,
             email: userStore.email,
-            token: userStore.token
+            token: userStore.token,
         });
         return res.status(201).json({
             ok: true,
-            msg: 'Recibirás un mail con las instrucciones para completar tu registro.',
+            msg: "Recibirás un mail con las instrucciones para completar tu registro.",
         });
     }
     catch (error) {
@@ -62,13 +62,13 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             throw (0, http_errors_1.default)(403, "Credenciales inválidas | PASSWORD");
         return res.status(200).json({
             ok: true,
-            msg: 'Usuario Logueado',
+            msg: "Usuario Logueado",
             token: (0, helpers_1.generateJWT)({ id: user._id }),
             user: {
                 _id: user._id,
                 name: user.name,
-                email: user.email
-            }
+                email: user.email,
+            },
         });
     }
     catch (error) {
@@ -89,7 +89,7 @@ const checked = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         yield user.save();
         return res.status(201).json({
             ok: true,
-            msg: 'Registro completado exitosamente'
+            msg: "Registro completado exitosamente",
         });
     }
     catch (error) {
@@ -107,10 +107,10 @@ const sendToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             throw (0, http_errors_1.default)(400, "Email incorrecto");
         user.token = (0, helpers_1.generateTokenRandom)();
         yield user.save();
-        //TODO: Enviar email para reestablecer la contraseña 
+        //TODO: Enviar email para reestablecer la contraseña
         return res.status(200).json({
             ok: true,
-            msg: 'Se ha enviado un email con las intrucciones'
+            msg: "Se ha enviado un email con las intrucciones",
         });
     }
     catch (error) {
@@ -122,7 +122,7 @@ const verifyToken = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         return res.status(200).json({
             ok: true,
-            msg: 'Token verificado'
+            msg: "Token verificado",
         });
     }
     catch (error) {
@@ -134,7 +134,7 @@ const changePassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
     try {
         return res.status(200).json({
             ok: true,
-            msg: 'Password actualizado'
+            msg: "Password actualizado",
         });
     }
     catch (error) {

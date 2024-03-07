@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
+/* import { User } from "./User"; */
 var projectSchema = new mongoose_1.default.Schema({
     name: {
         type: String,
@@ -26,22 +27,22 @@ var projectSchema = new mongoose_1.default.Schema({
     },
     createdBy: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+        ref: "User",
+        required: true,
     },
     tasks: [
         {
             type: mongoose_1.default.Schema.Types.ObjectId,
-            ref: 'Task',
-        }
+            ref: "Task",
+        },
     ],
     collaborators: [
         {
             type: mongoose_1.default.Schema.Types.ObjectId,
-            ref: 'User',
-        }
+            ref: "User",
+        },
     ],
 }, {
     timestamps: true,
 });
-exports.default = mongoose_1.default.model('Project', projectSchema);
+exports.default = mongoose_1.default.model("Project", projectSchema);

@@ -19,9 +19,10 @@ const User_1 = __importDefault(require("../models/User"));
 const http_errors_1 = __importDefault(require("http-errors"));
 const checkAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let token;
-    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+    if (req.headers.authorization &&
+        req.headers.authorization.startsWith("Bearer")) {
         try {
-            token = req.headers.authorization.split(' ')[1];
+            token = req.headers.authorization.split(" ")[1];
             const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
             req.user = yield User_1.default.findById(decoded.id).select("-password -checked -token -createdAt -updatedAt -__v");
         }
